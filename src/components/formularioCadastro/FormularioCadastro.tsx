@@ -1,4 +1,4 @@
-import React, {FormEvent, useState} from 'react';
+import React, {SubmitEvent, useState} from 'react';
 import {Button, FormControlLabel, Switch, TextField} from "@mui/material";
 
 interface ErrosFormulario {
@@ -6,11 +6,15 @@ interface ErrosFormulario {
     cpf?: string
 }
 
-function FormularioCadastro() {
-    const [campos, setCampos] = useState({nome: "", cpf: ""})
+interface FormularioCadastroProps {
+    aoEnviar: (dados: object) => void
+}
+
+function FormularioCadastro({aoEnviar}: FormularioCadastroProps) {
+    const [campos, setCampos] = useState({nome: "", cpf: "", promocoes: true, notificacoes: true})
     const [erros, setErros] = useState<ErrosFormulario>({})
 
-    function validarCampos(event: FormEvent<HTMLFormElement>) {
+    function validarCampos(event: SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
 
         const novosErros: ErrosFormulario = {};
@@ -25,13 +29,13 @@ function FormularioCadastro() {
         if (Object.keys(novosErros).length > 0) {
             return false;
         }
-        console.log(campos)
+        aoEnviar(campos);
         return true;
     }
 
     return (
         <form onSubmit={validarCampos}>
-            <TextField id="nome" label="Nome completo" variant="outlined" size="small" margin="normal"
+            <TextField id="nome" label="Nome completo" variant="outlined" size="small" margin="dense"
                        fullWidth
                        error={!!erros.nome}
                        helperText={erros.nome}
@@ -39,7 +43,7 @@ function FormularioCadastro() {
                            setCampos({...campos, nome: event.target.value});
                            setErros({...erros, nome: undefined});
                        }}/>
-            <TextField id="cpf-basic" label="CPF" variant="outlined" size="small" margin="normal"
+            <TextField id="cpf-basic" label="CPF" variant="outlined" size="small" margin="dense"
                        fullWidth
                        error={!!erros.cpf}
                        helperText={erros.cpf}
@@ -48,8 +52,8 @@ function FormularioCadastro() {
                            setErros({...erros, cpf: undefined});
                        }}/>
 
-            <FormControlLabel control={<Switch name="promocoes" defaultChecked></Switch>} label="Promoções"/>
-            <FormControlLabel control={<Switch name="notificacao" defaultChecked></Switch>} label="Notificações"/>
+            <FormControlLabel control={<Switch name="promocoes" checked={campos.promocoes} onChange={event => {setCampos({...campos, promocoes: event.target.checked})}}></Switch>} label="Promoções"/>
+            <FormControlLabel control={<Switch name="notificacoes" checked={campos.notificacoes} onChange={event => {setCampos({...campos, notificacoes: event.target.checked})}}></Switch>} label="Notificações"/>
 
             <Button type="submit" variant="contained" color="primary">Cadastrar</Button>
         </form>
