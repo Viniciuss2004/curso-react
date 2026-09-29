@@ -1,20 +1,17 @@
 import React from 'react';
 import './App.css';
-import FormularioCadastro from "./components/formularioCadastro/FormularioCadastro";
-import {Container, Typography} from "@mui/material";
+import {Box} from "@mui/material";
+import NavBar from "./components/utils/NavBar";
+import AppRoutes from "./components/utils/Router";
 
 function App() {
-    function aoEnviarForm(dados: object) {
-        console.log(dados);
-    }
-
     return (
-        <Container component="article" maxWidth="sm">
-            <Typography variant="h3" component="h1" align="center">
-                Formulário de Cadastro
-            </Typography>
-            <FormularioCadastro aoEnviar={aoEnviarForm}/>
-        </Container>
+        <Box component="article" sx={{width: "100%"}}>
+            <NavBar/>
+            <Box sx={{mt: 8}}>
+                <AppRoutes/>
+            </Box>
+        </Box>
     );
 }
 
